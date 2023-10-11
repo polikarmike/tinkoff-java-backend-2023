@@ -40,7 +40,7 @@ public class Task8 {
         return true;
     }
 
-    public static boolean isValidBoard(int[][] board) {
+    private static boolean isValidBoard(int[][] board) {
         return board.length == BOARD_SIZE && board[0].length == BOARD_SIZE;
     }
 }

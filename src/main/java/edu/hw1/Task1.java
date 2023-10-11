@@ -21,7 +21,7 @@ public class Task1 {
         return minutes * SECONDS_IN_MINUTE + seconds;
     }
 
-    public static boolean isValidTimeFormat(String timeString) {
+    private static boolean isValidTimeFormat(String timeString) {
         String pattern = "^[0-9]{1,9}:[0-5][0-9]$";
 
         if (timeString == null) {

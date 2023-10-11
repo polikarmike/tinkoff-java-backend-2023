@@ -46,6 +46,19 @@ public class Task5Test {
     }
 
     @Test
+    @DisplayName("Проверка с числом и палиндромным потомком (1234567890)")
+    void testPalindromeDescendant1() {
+        // given
+        int n = 1234567890;
+
+        // when
+        boolean result = Task5.isPalindromeDescendant(n);
+
+        // then
+        assertThat(result).isTrue();
+    }
+
+    @Test
     @DisplayName("Проверка с числом и палиндромным потомком (13001120)")
     void testPalindromeDescendant2() {
         // given

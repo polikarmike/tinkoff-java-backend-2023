@@ -47,7 +47,7 @@ public class Task6 {
         return recursiveCountK(descending - ascending, steps + 1);
     }
 
-    public static boolean areDigitsUnique(int number) {
+    private static boolean areDigitsUnique(int number) {
         String numberStr = Integer.toString(number);
         HashSet<Character> digitSet = new HashSet<>();
 

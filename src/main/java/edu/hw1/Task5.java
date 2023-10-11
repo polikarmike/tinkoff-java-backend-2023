@@ -17,19 +17,30 @@ public class Task5 {
                 return true;
             }
 
-            StringBuilder newNumStr = new StringBuilder();
-            for (int i = 0; i < numStr.length() - 1; i += 2) {
-                int digit1 = Character.getNumericValue(numStr.charAt(i));
-                int digit2 = Character.getNumericValue(numStr.charAt(i + 1));
-                int sum = digit1 + digit2;
-                newNumStr.append(sum);
-            }
-
-            numStr = newNumStr.toString();
+            numStr = createPalindromeDescendant(numStr);
         }
     }
 
-    public static boolean isPalindrome(String str) {
+    private static String createPalindromeDescendant(String numStr) {
+        StringBuilder newNumStr = new StringBuilder();
+
+        for (int i = 0; i < numStr.length() - 1; i += 2) {
+            int sum = sumDigits(numStr.charAt(i), numStr.charAt(i + 1));
+            newNumStr.append(sum);
+        }
+
+        if (numStr.length() % 2 != 0) {
+            newNumStr.append(numStr.charAt(numStr.length() - 1));
+        }
+
+        return newNumStr.toString();
+    }
+
+    private static int sumDigits(char digit1, char digit2) {
+        return Character.getNumericValue(digit1) + Character.getNumericValue(digit2);
+    }
+
+    private static boolean isPalindrome(String str) {
         int left = 0;
         int right = str.length() - 1;
 
