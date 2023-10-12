@@ -28,10 +28,8 @@ public class Task8 {
                     for (int[] knightMove : KNIGHT_MOVES) {
                         int x = row + knightMove[0];
                         int y = col + knightMove[1];
-                        if (x >= 0 && y >= 0 && x < BOARD_SIZE && y < BOARD_SIZE) {
-                            if (board[x][y] == 1) {
-                                return false;
-                            }
+                        if (isCellOccupied(x, y, board)) {
+                            return false;
                         }
                     }
                 }
@@ -42,5 +40,12 @@ public class Task8 {
 
     private static boolean isValidBoard(int[][] board) {
         return board.length == BOARD_SIZE && board[0].length == BOARD_SIZE;
+    }
+
+    private static boolean isCellOccupied(int x, int y, int[][] board) {
+        if (x >= 0 && y >= 0 && x < BOARD_SIZE && y < BOARD_SIZE) {
+            return board[x][y] == 1;
+        }
+        return false;
     }
 }
