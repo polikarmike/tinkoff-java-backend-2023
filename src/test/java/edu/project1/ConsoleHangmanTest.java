@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class ConsoleHangmanTest {
     private List<String> logMessages;
     private Appender appender;
@@ -53,7 +52,8 @@ public class ConsoleHangmanTest {
         hangman.run();
 
         // Then
-        boolean containsDefeatMessage = logMessages.stream().anyMatch(message -> message.contains("You're out of attempts!"));
+        boolean containsDefeatMessage =
+            logMessages.stream().anyMatch(message -> message.contains("You lost the game!"));
         assertThat(containsDefeatMessage).isTrue();
     }
 
@@ -70,6 +70,41 @@ public class ConsoleHangmanTest {
 
         // Then
         boolean containsGiveUp = logMessages.stream().anyMatch(message -> message.contains("You gave up!"));
+        assertThat(containsGiveUp).isTrue();
+    }
+
+    @Test
+    @DisplayName("Проверка некоректного ввода символа во время сессии")
+    public void InvalidLetterTest() {
+        // given
+        String input = "aa\nGIVE UP\nno\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+        // When
+        ConsoleHangman hangman = new ConsoleHangman();
+        hangman.run();
+
+        // Then
+        boolean containsGiveUp =
+            logMessages.stream().anyMatch(message -> message.contains("Please enter a single letter as your guess."));
+        assertThat(containsGiveUp).isTrue();
+    }
+
+    @Test
+    @DisplayName("Проверка некоректного ввода символа во время сессии")
+    public void InvalidExitCommandTest() {
+        // given
+        String input = "GIVE UP\ninvalidcommand\nno\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+        // When
+        ConsoleHangman hangman = new ConsoleHangman();
+        hangman.run();
+
+        // Then
+        boolean containsGiveUp =
+            logMessages.stream()
+                .anyMatch(message -> message.contains("Please enter 'yes' to play again or 'no' to quit."));
         assertThat(containsGiveUp).isTrue();
     }
 }

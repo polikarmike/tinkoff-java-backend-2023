@@ -9,79 +9,54 @@ public class ConsoleHangman {
     final static Logger LOGGER = LogManager.getLogger();
     private static final int MAX_ATTEMPTS = 6;
 
-    private static final String WELCOME_MESSAGE = "Welcome to Hangman!";
-    private static final String ATTEMPTS_MESSAGE = "You have %d attempts to guess the word.";
-    private static final String BEGIN_MESSAGE = "Let's begin!";
-    private static final String EMPTY_LINE = "";
-
-    private static final String EXIT_MESSAGE = "Do you want to play again? (yes/no)";
-    private static final String GIVE_UP = "GIVE UP";
-    private static final String GIVE_UP_INFO  = "To terminate the game, input: give up";
-    private static final String YES = "YES";
-    private static final String NO = "NO";
-    private static final String ENTER_GUESS = "Enter your guess: ";
-    private static final String PLEASE_ENTER_LETTER = "Please enter a single letter as your guess.";
-    private static final String PLEASE_ENTER_YES_OR_NO = "Please enter 'yes' to play again or 'no' to quit.";
-
     public void run() {
         PredefinedDictionary dictionary = new PredefinedDictionary();
         boolean playAgain = true;
+
+        TextHandler.printInitInfo();
 
         while (playAgain) {
             String wordToGuess = dictionary.randomWord();
             Session session = new Session(wordToGuess, MAX_ATTEMPTS);
 
-            LOGGER.info(WELCOME_MESSAGE);
-            LOGGER.info(String.format(ATTEMPTS_MESSAGE, session.getMaxAttempts()));
-            LOGGER.info(GIVE_UP_INFO);
-            LOGGER.info(BEGIN_MESSAGE);
-            LOGGER.info(EMPTY_LINE);
+            TextHandler.printStartSession();
+            TextHandler.printState(session.initState());
 
             while (session.getAttempts() < session.getMaxAttempts()) {
-                printState(session.guessResult());
 
                 String userInput = readUserInput();
 
-                if (userInput.equals(EXIT_MESSAGE)) {
+                if (userInput.equals(TextHandler.GIVE_UP_COMMAND)) {
                     GuessResult giveUpResult = session.giveUp();
-                    printState(giveUpResult);
+                    TextHandler.printState(giveUpResult);
                     break;
                 }
+
                 char guess = userInput.charAt(0);
 
                 GuessResult guessResult = session.guess(guess);
+                TextHandler.printState(guessResult);
 
                 if (guessResult instanceof GuessResult.Win || guessResult instanceof GuessResult.Defeat) {
-                    printState(guessResult);
                     break;
                 }
             }
+            playAgain = requestNewGame();
 
-            String playAgainInput = readPlayAgainInput();
-            if (!playAgainInput.equalsIgnoreCase(YES)) {
-                playAgain = false;
-            }
         }
-    }
-
-    private void printState(GuessResult guessResult) {
-        LOGGER.info("Word: " + String.valueOf(guessResult.state()));
-        LOGGER.info("Attempts left: " + (guessResult.maxAttempts() - guessResult.attempt()));
-        LOGGER.info("Message: " + guessResult.message());
-        LOGGER.info(EMPTY_LINE);
     }
 
     private String readUserInput() {
-        LOGGER.info(ENTER_GUESS);
+        LOGGER.info(TextHandler.GUESS_PROMPT_MESSAGE);
 
         String userInput = scanner.nextLine();
 
-        if (userInput.equalsIgnoreCase(GIVE_UP)) {
-            return EXIT_MESSAGE;
+        if (userInput.equalsIgnoreCase(TextHandler.GIVE_UP_COMMAND)) {
+            return TextHandler.GIVE_UP_COMMAND;
         }
 
         if (userInput.length() != 1) {
-            LOGGER.info(PLEASE_ENTER_LETTER);
+            LOGGER.info(TextHandler.INVALID_LETTER_MESSAGE);
             return readUserInput();
         }
 
@@ -89,15 +64,21 @@ public class ConsoleHangman {
     }
 
     private String readPlayAgainInput() {
-        LOGGER.info(EXIT_MESSAGE);
+        LOGGER.info(TextHandler.EXIT_PROMPT_MESSAGE);
 
         String userInput = scanner.nextLine();
 
-        if (userInput.equalsIgnoreCase(YES) || userInput.equalsIgnoreCase(NO)) {
+        if (userInput.equalsIgnoreCase(TextHandler.ACCEPTANCE_COMMAND)
+            || userInput.equalsIgnoreCase(TextHandler.REJECTION_COMMAND)) {
             return userInput;
         }
 
-        LOGGER.info(PLEASE_ENTER_YES_OR_NO);
+        LOGGER.info(TextHandler.INVALID_EXIT_COMMAND_MESSAGE);
         return readPlayAgainInput();
+    }
+
+    private boolean requestNewGame() {
+        String playAgainInput = readPlayAgainInput();
+        return playAgainInput.equalsIgnoreCase(TextHandler.ACCEPTANCE_COMMAND);
     }
 }

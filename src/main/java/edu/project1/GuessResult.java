@@ -3,7 +3,7 @@ package edu.project1;
 import org.jetbrains.annotations.NotNull;
 
 sealed interface GuessResult {
-    char[] state();
+    String state();
 
     int attempt();
 
@@ -11,12 +11,49 @@ sealed interface GuessResult {
 
     @NotNull String message();
 
-    record Defeat(char[] state, int attempt, int maxAttempts, @NotNull String message) implements GuessResult {
+
+    record InitState(String state, int attempt, int maxAttempts) implements GuessResult {
+        @Override
+        public @NotNull String message() {
+            return "Please enter a letter.";
+        }
     }
 
-    record Win(char[] state, int attempt, int maxAttempts, @NotNull String message) implements GuessResult {
+    record AlreadyGuessed(String state, int attempt, int maxAttempts) implements GuessResult {
+        @Override
+        public @NotNull String message() {
+            return "This letter was already guessed!";
+        }
     }
 
-    record SuccessfulGuess(char[] state, int attempt, int maxAttempts, @NotNull String message) implements GuessResult {
+
+    record Defeat(String state, int attempt, int maxAttempts) implements GuessResult {
+        @Override
+        public @NotNull String message() {
+            return "You lost the game!";
+        }
     }
+
+    record GiveUp(String state, int attempt, int maxAttempts) implements GuessResult {
+        @Override
+        public @NotNull String message() {
+            return "You gave up!";
+        }
+    }
+
+    record Win(String state, int attempt, int maxAttempts) implements GuessResult {
+        @Override
+        public @NotNull String message() {
+            return "Congratulations, you've won!";
+        }
+    }
+
+    record SuccessfulGuess(String state, int attempt, int maxAttempts) implements GuessResult {
+        @Override
+        public @NotNull String message() {
+            return "Keep guessing!";
+        }
+    }
+
+
 }

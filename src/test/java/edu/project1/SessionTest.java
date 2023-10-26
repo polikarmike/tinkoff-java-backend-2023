@@ -69,10 +69,10 @@ public class SessionTest {
         GuessResult result = session.guess('z');
 
         // Then
-        assertEquals("___rr_", String.valueOf(result.state()));
+        assertEquals("cherry", String.valueOf(result.state()));
         assertEquals(3, result.attempt());
         assertEquals(3, result.maxAttempts());
-        assertEquals("You're out of attempts! The word was: cherry", result.message());
+        assertEquals("You lost the game!", result.message());
     }
 
     @Test
@@ -85,10 +85,10 @@ public class SessionTest {
         GuessResult result = session.giveUp();
 
         // Then
-        assertEquals("__________", String.valueOf(result.state()));
+        assertEquals("watermelon", String.valueOf(result.state()));
         assertEquals(6, result.attempt());
         assertEquals(6, result.maxAttempts());
-        assertEquals("You gave up! The word was: watermelon", result.message());
+        assertEquals("You gave up!", result.message());
     }
 
     @Test
@@ -105,7 +105,7 @@ public class SessionTest {
         assertEquals("a____", String.valueOf(result.state()));
         assertEquals(0, result.attempt());
         assertEquals(6, result.maxAttempts());
-        assertEquals("Keep guessing!", result.message());
+        assertEquals("This letter was already guessed!", result.message());
     }
 }
 

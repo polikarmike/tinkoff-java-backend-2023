@@ -1,26 +1,22 @@
 package edu.project1;
 
-import java.util.Arrays;
-import org.jetbrains.annotations.NotNull;
+import java.util.HashSet;
 
 class Session {
     private final String answer;
-    private final char[] userAnswer;
+    private final StringBuilder userAnswer;
     private final int maxAttempts;
     private int attempts;
-    private final char placeholder = '_';
+    private final HashSet<Character> guessedChars;
 
-    private final String keepGuessingMessage = "Keep guessing!";
-    private final String outOfAttemptsMessage = "You're out of attempts! The word was: ";
-    private final String winMessage = "Congratulations, you've won!";
-    private final String defeatMessage = "You gave up! The word was: ";
+    private static final char PLACEHOLDER = '_';
 
     Session(String answer, int maxAttempts) {
-        this.answer = answer;
-        this.userAnswer = new char[answer.length()];
-        Arrays.fill(this.userAnswer, placeholder);
+        this.answer = answer.toLowerCase();
+        this.userAnswer = initializeUserAnswer(answer.length());
         this.maxAttempts = maxAttempts;
         this.attempts = 0;
+        this.guessedChars = new HashSet<>();
     }
 
     public int getAttempts() {
@@ -31,48 +27,53 @@ class Session {
         return maxAttempts;
     }
 
-    public GuessResult guessResult() {
-        return new GuessResult.SuccessfulGuess(userAnswer.clone(), attempts, maxAttempts, keepGuessingMessage);
+    public GuessResult initState() {
+        return new GuessResult.InitState(userAnswer.toString(), attempts, maxAttempts);
     }
 
-    @NotNull
     public GuessResult guess(char guess) {
-        boolean correctGuess = false;
-        boolean alreadyGuessed = false;
-
-        for (int i = 0; i < answer.length(); i++) {
-            if (answer.charAt(i) == guess) {
-                if (userAnswer[i] == placeholder) {
-                    userAnswer[i] = guess;
-                    correctGuess = true;
-                } else {
-                    alreadyGuessed = true;
-                }
-            }
+        if (guessedChars.contains(guess)) {
+            return new GuessResult.AlreadyGuessed(userAnswer.toString(), attempts, maxAttempts);
         }
 
-        if (alreadyGuessed) {
-            return new GuessResult.SuccessfulGuess(userAnswer.clone(), attempts, maxAttempts, keepGuessingMessage);
-        }
+        guessedChars.add(guess);
+
+        boolean correctGuess = processGuess(guess);
 
         if (!correctGuess) {
             attempts++;
         }
 
-        if (String.valueOf(userAnswer).equals(answer)) {
-            return new GuessResult.Win(userAnswer.clone(), attempts, maxAttempts, winMessage);
+        if (userAnswer.toString().equals(answer)) {
+            return new GuessResult.Win(answer, attempts, maxAttempts);
         }
 
         if (attempts >= maxAttempts) {
-            return new GuessResult.Defeat(userAnswer.clone(), attempts, maxAttempts, outOfAttemptsMessage + answer);
+            return new GuessResult.Defeat(answer, attempts, maxAttempts);
         }
 
-        return new GuessResult.SuccessfulGuess(userAnswer.clone(), attempts, maxAttempts, keepGuessingMessage);
+        return new GuessResult.SuccessfulGuess(userAnswer.toString(), attempts, maxAttempts);
     }
 
-
-    @NotNull
     public GuessResult giveUp() {
-        return new GuessResult.Defeat(userAnswer.clone(), maxAttempts, maxAttempts, defeatMessage + answer);
+        return new GuessResult.GiveUp(answer, maxAttempts, maxAttempts);
+    }
+
+    private StringBuilder initializeUserAnswer(int length) {
+        StringBuilder placeholder = new StringBuilder();
+        placeholder.append(String.valueOf(PLACEHOLDER).repeat(Math.max(0, length)));
+        return placeholder;
+    }
+
+    private boolean processGuess(char guess) {
+        boolean correctGuess = false;
+
+        for (int i = 0; i < answer.length(); i++) {
+            if (answer.charAt(i) == guess) {
+                userAnswer.setCharAt(i, guess);
+                correctGuess = true;
+            }
+        }
+        return correctGuess;
     }
 }
