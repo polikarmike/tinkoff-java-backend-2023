@@ -9,4 +9,5 @@ public final class Task0 {
     public void helloWorld() {
         LOGGER.info("Привет, мир!");
     }
+
 }
