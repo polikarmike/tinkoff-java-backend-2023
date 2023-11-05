@@ -11,11 +11,7 @@ public class Task3 {
         HashMap<T, Integer> frequencyMap = new HashMap<>();
 
         for (T item : inputList) {
-            if (frequencyMap.containsKey(item)) {
-                frequencyMap.put(item, frequencyMap.get(item) + 1);
-            } else {
-                frequencyMap.put(item, 1);
-            }
+            frequencyMap.put(item, frequencyMap.getOrDefault(item, 0) + 1);
         }
 
         return frequencyMap;
