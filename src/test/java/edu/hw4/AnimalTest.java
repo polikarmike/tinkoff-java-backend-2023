@@ -281,10 +281,16 @@ public class AnimalTest {
         int l = 15;
 
         // When
-        int totalWeight = AnimalMethods.totalWeightBetweenAges(animals, k, l);
+        Map<Animal.Type, Integer> totalWeight = AnimalMethods.totalWeightBetweenAges(animals, k, l);
 
         // Then
-        assertEquals(21, totalWeight);
+        Map<Animal.Type, Integer> expected = Map.of(
+            Animal.Type.CAT, 5,  // 2 + 6
+            Animal.Type.DOG, 15,
+            Animal.Type.BIRD, 1// 20 + 15
+        );
+
+        assertEquals(expected, totalWeight);
     }
 
     @Test

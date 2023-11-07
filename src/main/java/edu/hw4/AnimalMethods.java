@@ -125,14 +125,10 @@ public class AnimalMethods {
     }
 
     // Задание №15
-    static int totalWeightBetweenAges(List<Animal> animals, int k, int l) {
+    static Map<Animal.Type, Integer> totalWeightBetweenAges(List<Animal> animals, int k, int l) {
         return animals.stream()
             .filter(animal -> animal.age() >= k && animal.age() <= l)
-            .collect(Collectors.groupingBy(Animal::type, Collectors.summingInt(Animal::weight)))
-            .values()
-            .stream()
-            .mapToInt(Integer::intValue)
-            .sum();
+            .collect(Collectors.groupingBy(Animal::type, Collectors.summingInt(Animal::weight)));
     }
 
     // Задание №16
@@ -147,11 +143,11 @@ public class AnimalMethods {
     // Задание №17
     public static boolean isSpidersBiteMoreThanDogs(List<Animal> animals) {
         long spiderCount = animals.stream()
-            .filter(animal -> animal.type() == Animal.Type.SPIDER)
+            .filter(animal -> animal.type() == Animal.Type.SPIDER && animal.bites())
             .count();
 
         long dogCount = animals.stream()
-            .filter(animal -> animal.type() == Animal.Type.DOG)
+            .filter(animal -> animal.type() == Animal.Type.DOG && animal.bites())
             .count();
 
         return spiderCount > dogCount;
