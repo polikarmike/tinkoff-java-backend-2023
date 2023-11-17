@@ -2,6 +2,7 @@ package edu.project2;
 
 import edu.project2.Types.Cell;
 import edu.project2.Types.Maze;
+import java.util.Collections;
 import java.util.List;
 
 public class Render {
@@ -15,17 +16,9 @@ public class Render {
 
     }
 
-    @SuppressWarnings("RegexpSinglelineJava")
+
     public static void printMaze(Maze maze) {
-        for (int i = 0; i < maze.getHeight(); i++) {
-            for (int j = 0; j < maze.getWidth(); j++) {
-                printCell(maze.cells[i][j]);
-            }
-
-            System.out.println();
-        }
-
-
+        printMaze(maze, Collections.emptyList());
     }
 
     @SuppressWarnings("RegexpSinglelineJava")
@@ -39,21 +32,27 @@ public class Render {
             for (int j = 0; j < maze.getWidth(); j++) {
                 printCell(maze.cells[i][j], path);
             }
-
-            System.out.println();
+            System.out.print("\n");
         }
     }
 
     @SuppressWarnings("RegexpSinglelineJava")
     private static void printCell(Cell cell) {
-        if (cell.isStart()) {
-            System.out.print(START);
-        } else if (cell.isExit()) {
-            System.out.print(EXIT);
-        } else if (cell.isClear()) {
-            System.out.print(EMPTY);
-        } else if (cell.isWall()) {
-            System.out.print(WALL);
+        switch (cell.getType()) {
+            case START:
+                System.out.print(START);
+                break;
+            case EXIT:
+                System.out.print(EXIT);
+                break;
+            case EMPTY:
+                System.out.print(EMPTY);
+                break;
+            case WALL:
+                System.out.print(WALL);
+                break;
+            default:
+                break;
         }
     }
 
@@ -65,5 +64,4 @@ public class Render {
             printCell(cell);
         }
     }
-
 }

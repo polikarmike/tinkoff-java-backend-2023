@@ -21,14 +21,14 @@ public class Main {
 
         Maze primsMaze = new PrimsMazeGenerator(MAZE_WIDTH, MAZE_HEIGHT).generateMaze();
         primsMaze.setRandomStartExit();
-        List<Cell> solvedPrimsMaze = new DFSMazeSolver(primsMaze).solveMaze();
+        List<Cell> solvedPrimsMaze = new DFSMazeSolver().solveMaze(primsMaze);
         System.out.println("Алгоритм Прима + DFS:");
         Render.printMaze(primsMaze, solvedPrimsMaze);
         System.out.println();
 
         Maze recBackMaze = new RecursiveBacktrackingMazeGenerator(MAZE_WIDTH, MAZE_HEIGHT).generateMaze();
         recBackMaze.setRandomStartExit();
-        List<Cell> solvedRecBackMaze = new BFSMazeSolver(recBackMaze).solveMaze();
+        List<Cell> solvedRecBackMaze = new BFSMazeSolver().solveMaze(recBackMaze);
         System.out.println("Рекурсивный возврат + BFS:");
         Render.printMaze(recBackMaze, solvedRecBackMaze);
 

@@ -6,11 +6,10 @@ import java.util.Collections;
 import java.util.List;
 
 
-public class RecursiveBacktrackingMazeGenerator extends Maze {
+public class RecursiveBacktrackingMazeGenerator implements MazeGenerator {
     private final Maze maze;
 
     public RecursiveBacktrackingMazeGenerator(int width, int height) {
-        super(width, height);
         this.maze = new Maze(width, height);
     }
 
@@ -25,7 +24,7 @@ public class RecursiveBacktrackingMazeGenerator extends Maze {
     }
 
     public static void recursiveBacktracking(Maze maze, Cell currnetCell) {
-        currnetCell.setWall(false);
+        currnetCell.setType(Cell.CellType.EMPTY);
 
         List<Cell> neighbors = maze.getNeighbors(currnetCell, 2);
         Collections.shuffle(neighbors);

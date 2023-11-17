@@ -7,12 +7,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class PrimsMazeGenerator extends Maze {
+public class PrimsMazeGenerator implements MazeGenerator {
     private final Maze maze;
     private static final Random RANDOM = new Random();
 
     public PrimsMazeGenerator(int width, int height) {
-        super(width, height);
         this.maze = new Maze(width, height);
     }
 
@@ -34,7 +33,7 @@ public class PrimsMazeGenerator extends Maze {
 
             for (Cell neighborCell : neighborsList) {
                 if (neighborCell.isWall()) {
-                    neighborCell.setWall(false);
+                    neighborCell.setType(Cell.CellType.EMPTY);
                     maze.removeWallsBetweenCells(currentCell, neighborCell);
                     currentCells.add(neighborCell);
                 }

@@ -5,14 +5,13 @@ import edu.project2.Types.Maze;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DFSMazeSolver {
-    private final Maze maze;
+public class DFSMazeSolver implements MazeSolver {
 
-    public DFSMazeSolver(Maze maze) {
-        this.maze = maze;
+    public DFSMazeSolver() {
+
     }
 
-    public List<Cell> solveMaze() {
+    public List<Cell> solveMaze(Maze maze) {
         Cell start = maze.start;
         Cell exit = maze.exit;
 
@@ -21,8 +20,8 @@ public class DFSMazeSolver {
         }
 
         List<Cell> result = new ArrayList<>();
-        boolean success = depthFirstSearch(start, exit, result);
-
+        boolean success = depthFirstSearch(maze, start, exit, result);
+        maze.setMazeUnvisited();
         if (!success) {
             return null;
         } else {
@@ -30,7 +29,7 @@ public class DFSMazeSolver {
         }
     }
 
-    private boolean depthFirstSearch(Cell currentCell, Cell exit, List<Cell> path) {
+    private boolean depthFirstSearch(Maze maze, Cell currentCell, Cell exit, List<Cell> path) {
         path.add(currentCell);
         currentCell.setVisited(true);
 
@@ -43,7 +42,7 @@ public class DFSMazeSolver {
 
         for (Cell neighborCell : neighborsList) {
             if (isValidMove(neighborCell)) {
-                if (depthFirstSearch(neighborCell, exit, path)) {
+                if (depthFirstSearch(maze, neighborCell, exit, path)) {
                     return true;
                 }
             }

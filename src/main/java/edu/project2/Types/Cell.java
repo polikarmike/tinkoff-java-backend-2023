@@ -3,34 +3,37 @@ package edu.project2.Types;
 public class Cell {
     private final int row;
     private final int column;
-    private boolean isWall;
-    private boolean isStart;
-    private boolean isExit;
     private boolean visited;
     private Cell parent;
+    private CellType type;
 
-    public Cell(int row, int column) {
-        this(row, column, false);
+    public enum CellType {
+        EMPTY,
+        START,
+        EXIT,
+        WALL
     }
 
-    public Cell(int row, int column, boolean isWall) {
+    public Cell(int row, int column) {
+        this(row, column, CellType.EMPTY);
+    }
+
+    public Cell(int row, int column, CellType type) {
         this.row = row;
         this.column = column;
-        this.isWall = isWall;
-        this.isStart = false;
-        this.isExit = false;
+        this.type = type;
+    }
+
+    public CellType getType() {
+        return type;
+    }
+
+    public void setType(CellType type) {
+        this.type = type;
     }
 
     public boolean isWall() {
-        return isWall;
-    }
-
-    public boolean isClear() {
-        return !isWall && !isExit && !isStart;
-    }
-
-    public void setWall(boolean isWall) {
-        this.isWall = isWall;
+        return type == CellType.WALL;
     }
 
     public int getRow() {
@@ -57,19 +60,11 @@ public class Cell {
         this.parent = parent;
     }
 
-    public void setStart(boolean isStart) {
-        this.isStart = isStart;
-    }
-
     public boolean isStart() {
-        return isStart;
-    }
-
-    public void setExit(boolean isExit) {
-        this.isExit = isExit;
+        return type == CellType.START;
     }
 
     public boolean isExit() {
-        return isExit;
+        return type == CellType.EXIT;
     }
 }

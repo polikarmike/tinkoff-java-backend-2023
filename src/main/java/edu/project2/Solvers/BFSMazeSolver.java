@@ -8,17 +8,11 @@ import java.util.List;
 import java.util.Queue;
 
 
-public class BFSMazeSolver {
-
-    private final Maze maze;
-    private final Queue<Cell> queue;
-
-    public BFSMazeSolver(Maze maze) {
-        this.maze = maze;
-        this.queue = new LinkedList<>();
+public class BFSMazeSolver implements MazeSolver {
+    public BFSMazeSolver() {
     }
 
-    public List<Cell> solveMaze() {
+    public List<Cell> solveMaze(Maze maze) {
         Cell start = maze.start;
         Cell exit = maze.exit;
 
@@ -26,26 +20,30 @@ public class BFSMazeSolver {
             return null;
         }
 
+        Queue<Cell> queue = new LinkedList<>();
         start.setVisited(true);
         queue.offer(start);
 
-        while (!queue.isEmpty()) {
-            Cell currentCell = queue.poll();
+        try {
+            while (!queue.isEmpty()) {
+                Cell currentCell = queue.poll();
 
-            if (currentCell == exit) {
-                return reconstructPath(currentCell);
-            }
+                if (currentCell == exit) {
+                    return reconstructPath(currentCell);
+                }
 
-            List<Cell> neighbors = maze.getNeighbors(currentCell, 1);
-            for (Cell neighbor : neighbors) {
-                if (!neighbor.isVisited() && !neighbor.isWall()) {
-                    neighbor.setVisited(true);
-                    neighbor.setParent(currentCell);
-                    queue.offer(neighbor);
+                List<Cell> neighbors = maze.getNeighbors(currentCell, 1);
+                for (Cell neighbor : neighbors) {
+                    if (!neighbor.isVisited() && !neighbor.isWall()) {
+                        neighbor.setVisited(true);
+                        neighbor.setParent(currentCell);
+                        queue.offer(neighbor);
+                    }
                 }
             }
+        } finally {
+            maze.setMazeUnvisited();
         }
-
         return null;
     }
 

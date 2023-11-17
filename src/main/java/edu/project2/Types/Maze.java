@@ -33,13 +33,34 @@ public class Maze {
         return cellsArray;
     }
 
+    public void setMazeUnvisited() {
+        for (int col = 0; col < height; col++) {
+            for (int row = 0; row < width; row++) {
+                this.cells[col][row].setVisited(false);
+                this.cells[col][row].setParent(null);
+            }
+        }
+    }
+
     public void fillWithWalls() {
+        clearStartAndExit();
+
         for (int col = 0; col < this.height; col++) {
             for (int row = 0; row < this.width; row++) {
-                this.cells[col][row].setWall(true);
+                this.cells[col][row].setType(Cell.CellType.WALL);
             }
         }
 
+    }
+
+    private void clearStartAndExit() {
+        if (start != null) {
+            this.start = null;
+        }
+
+        if (exit != null) {
+            this.exit = null;
+        }
     }
 
     public int getWidth() {
@@ -82,9 +103,9 @@ public class Maze {
         } while (cells[exitRow][exitCol].isWall() || (startRow == exitRow && startCol == exitCol));
 
 
-        cells[startRow][startCol].setStart(true);
+        cells[startRow][startCol].setType(Cell.CellType.START);
         setStart(startRow, startCol);
-        cells[exitRow][exitCol].setExit(true);
+        cells[exitRow][exitCol].setType(Cell.CellType.EXIT);
         setExit(exitRow, exitCol);
     }
 
@@ -93,7 +114,7 @@ public class Maze {
         int ny = neighborCell.getRow();
         int cx = currentCell.getColumn();
         int cy = currentCell.getRow();
-        this.cells[(ny + cy) / 2][(nx + cx) / 2].setWall(false);
+        this.cells[(ny + cy) / 2][(nx + cx) / 2].setType(Cell.CellType.EMPTY);
     }
 
 
@@ -114,7 +135,7 @@ public class Maze {
             int neighborX = currentX + direction[0] * steps;
             int neighborY = currentY + direction[1] * steps;
 
-            if (isValidCell(neighborX, neighborY)) {
+            if (inBounds(neighborX, neighborY)) {
                 neighborsList.add(cells[neighborX][neighborY]);
             }
         }
@@ -122,7 +143,7 @@ public class Maze {
         return neighborsList;
     }
 
-    private boolean isValidCell(int row, int col) {
+    private boolean inBounds(int row, int col) {
         return row >= 0 && row < height && col >= 0 && col < width;
     }
 

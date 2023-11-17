@@ -52,7 +52,7 @@ public class Project2Test {
         primsMaze.setRandomStartExit();
 
         // When
-        List<Cell> solvedPrimsMaze = new DFSMazeSolver(primsMaze).solveMaze();
+        List<Cell> solvedPrimsMaze = new DFSMazeSolver().solveMaze(primsMaze);
 
         // Then
         assertNotNull(solvedPrimsMaze);
@@ -70,7 +70,7 @@ public class Project2Test {
         recBackMaze.setRandomStartExit();
 
         // When
-        List<Cell> solvedRecBackMaze = new BFSMazeSolver(recBackMaze).solveMaze();
+        List<Cell> solvedRecBackMaze = new BFSMazeSolver().solveMaze(recBackMaze);
 
         // Then
         assertNotNull(solvedRecBackMaze);
@@ -102,8 +102,8 @@ public class Project2Test {
         Maze maze = new Maze(10, 10);
 
         // When
-        List<Cell> solvedDFSMaze = new DFSMazeSolver(maze).solveMaze();
-        List<Cell> solvedBFSMaze = new BFSMazeSolver(maze).solveMaze();
+        List<Cell> solvedDFSMaze = new DFSMazeSolver().solveMaze(maze);
+        List<Cell> solvedBFSMaze = new BFSMazeSolver().solveMaze(maze);
 
         // Then
         assertNull(solvedDFSMaze);
