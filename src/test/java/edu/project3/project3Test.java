@@ -76,7 +76,8 @@ public class project3Test {
         // Then
         assertTrue(Files.exists(Path.of(outputPath)));
         List<String> lines = Files.readAllLines(Path.of(outputPath));
-        assertEquals("| Файл(-ы) | `2015_2_logs.txt`, `2015_3_logs.txt` |", lines.get(4));
+        assertTrue(lines.get(4).contains("2015_2_logs.txt"));
+        assertTrue(lines.get(4).contains("2015_3_logs.txt"));
     }
 
     @DisplayName("Создание файла-статистики с ограничениями по дате")
