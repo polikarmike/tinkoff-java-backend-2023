@@ -12,8 +12,13 @@ public class HackerNews {
     private static final String TOP_STORIES_URL = "https://hacker-news.firebaseio.com/v0/topstories.json";
     private static final String ITEM_URL_TEMPLATE = "https://hacker-news.firebaseio.com/v0/item/%d.json";
     private static final int HTTP_OK_STATUS_CODE = 200;
+    private final HttpClient httpClient;
 
-    public long[] hackerNewsTopStories() {
+    public HackerNews(HttpClient httpClient) {
+        this.httpClient = httpClient;
+    }
+
+    public long[] hackerNewsTopStories() throws Exception {
         try {
             String responseBody = sendGetRequest(TOP_STORIES_URL);
             String[] ids = responseBody.replaceAll("\\[|\\]", "").split(",");
@@ -41,18 +46,21 @@ public class HackerNews {
         return "Title not found";
     }
 
-    private static String sendGetRequest(String url) throws Exception {
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-            .uri(URI.create(url))
-            .build();
+    private String sendGetRequest(String url) {
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .build();
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
-        if (response.statusCode() == HTTP_OK_STATUS_CODE) {
-            return response.body();
-        } else {
-            throw new RuntimeException("HTTP request failed");
+            if (response.statusCode() == HTTP_OK_STATUS_CODE) {
+                return response.body();
+            } else {
+                throw new RuntimeException("HTTP request failed");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

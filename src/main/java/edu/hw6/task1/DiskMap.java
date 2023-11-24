@@ -14,6 +14,7 @@ import java.util.Map;
 public class DiskMap implements Map<String, String> {
     private String filePath;
     private Map<String, String> inMemoryMap;
+    private static final String DELIMITER = ":";
 
     public DiskMap(String filePath) {
         this.filePath = filePath;
@@ -35,7 +36,7 @@ public class DiskMap implements Map<String, String> {
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(":");
+                String[] parts = line.split(DELIMITER);
                 if (parts.length == 2) {
                     String key = parts[0].trim();
                     String value = parts[1].trim();
@@ -50,7 +51,7 @@ public class DiskMap implements Map<String, String> {
     private void saveToDisk() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             for (Map.Entry<String, String> entry : inMemoryMap.entrySet()) {
-                writer.write(entry.getKey() + ":" + entry.getValue());
+                writer.write(entry.getKey() + DELIMITER + entry.getValue());
                 writer.newLine();
             }
         } catch (IOException e) {

@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class FileCloner {
+    private static final char DOT = '.';
 
     private FileCloner() {
 
@@ -32,12 +33,12 @@ public class FileCloner {
     }
 
     private static String getBaseName(String fileName) {
-        int dotIndex = fileName.lastIndexOf('.');
+        int dotIndex = fileName.lastIndexOf(DOT);
         return (dotIndex == -1) ? fileName : fileName.substring(0, dotIndex);
     }
 
     private static String getFileExtension(String fileName) {
-        int dotIndex = fileName.lastIndexOf('.');
+        int dotIndex = fileName.lastIndexOf(DOT);
         return (dotIndex == -1) ? "" : fileName.substring(dotIndex);
     }
 
