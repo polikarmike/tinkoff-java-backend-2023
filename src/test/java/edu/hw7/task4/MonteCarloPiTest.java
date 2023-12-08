@@ -2,7 +2,6 @@ package edu.hw7.task4;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import java.io.IOException;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -38,7 +37,7 @@ public class MonteCarloPiTest {
 
     @Test
     @DisplayName("Проверка создания отчета")
-    void testCreateReport() throws IOException {
+    void testCreateReport() {
         // Given
         String filePath = "src/test/java/edu/hw7/task4/test_github_simulation_results.txt";
         List<Integer> iterationsList = List.of(1_000_000, 500_000, 250_000);
