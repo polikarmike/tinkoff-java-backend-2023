@@ -192,7 +192,7 @@
                         <excludes>
                             <exclude>**/com/edu/hw11/task2/ArithmeticUtils.class</exclude>
                             <exclude>**/com/edu/hw11/task2ArithmeticUtilsInterceptor.class</exclude>
-                            <exclude>**/com/edu/hw11/Task2Test.javaTask2Test.class</exclude>
+                            <exclude>**/com/edu/hw11/Task2Test.class</exclude>
                         </excludes>
                     </configuration>
                 </plugin>

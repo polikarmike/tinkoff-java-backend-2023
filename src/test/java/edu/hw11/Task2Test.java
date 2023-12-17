@@ -15,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class Task2Test {
     @Test
     @DisplayName("Перехват метода класса")
-    @Disabled
     public void testClassMethodInterception() throws Exception {
         ByteBuddyAgent.install();
         try {
