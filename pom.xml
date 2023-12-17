@@ -177,6 +177,7 @@
                         <excludes>
                             <exclude>**/ArithmeticUtils.class</exclude>
                             <exclude>**/ArithmeticUtilsInterceptor.class</exclude>
+                            <exclude>**/Task2Test.class</exclude>
                         </excludes>
                     </configuration>
                     <executions>
