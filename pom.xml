@@ -190,9 +190,9 @@
                     </executions>
                     <configuration>
                         <excludes>
-                            <exclude>**/*ArithmeticUtils.class</exclude>
-                            <exclude>**/*ArithmeticUtilsInterceptor.class</exclude>
-                            <exclude>**/*Task2Test.class</exclude>
+                            <exclude>edu.hw11.task2.ArithmeticUtils.class</exclude>
+                            <exclude>edu.hw11.task2.ArithmeticUtilsInterceptor.class</exclude>
+                            <exclude>edu.hw11.Task2Test.class</exclude>
                         </excludes>
                     </configuration>
                 </plugin>
