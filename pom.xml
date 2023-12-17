@@ -172,8 +172,12 @@
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
+                    <configuration>
+                        <excludes>
+                            <exclude>edu/hw11/task2/**</exclude>
+                        </excludes>
+                    </configuration>
                     <version>${jacoco-maven-plugin.version}</version>
-
                     <executions>
                         <execution>
                             <goals>
@@ -188,13 +192,6 @@
                             </goals>
                         </execution>
                     </executions>
-                    <configuration>
-                        <excludes>
-                            <exclude>**/edu/hw11/task2/ArithmeticUtils.class</exclude>
-                            <exclude>**/edu/hw11/task2/ArithmeticUtilsInterceptor.class</exclude>
-                            <exclude>**/edu/hw11/Task2Test.class</exclude>
-                        </excludes>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
