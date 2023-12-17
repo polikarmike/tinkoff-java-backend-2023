@@ -26,9 +26,9 @@ public class Task2Test {
                 .load(ArithmeticUtilsInterceptor.class.getClassLoader(), ClassReloadingStrategy.fromInstalledAgent());
             assertEquals(ArithmeticUtils.sum(2,3), 6);
         } finally {
-//            ClassReloadingStrategy.fromInstalledAgent().reset(ArithmeticUtils.class);
+            ClassReloadingStrategy.fromInstalledAgent().reset(ArithmeticUtils.class);
         }
 
-//        assertEquals(ArithmeticUtils.sum(2,3), 5);
+        assertEquals(ArithmeticUtils.sum(2,3), 5);
     }
 }
