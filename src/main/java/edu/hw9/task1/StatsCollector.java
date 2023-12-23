@@ -34,21 +34,24 @@ public class StatsCollector {
         });
     }
 
-    public List<MetricStats> stats() throws ExecutionException, InterruptedException {
+    public List<MetricStats> stats() {
         ExecutorService executor = Executors.newFixedThreadPool(data.size());
         List<Future<MetricStats>> futures = new ArrayList<>();
-
-        for (Map.Entry<String, List<Double>> entry : data.entrySet()) {
-            Callable<MetricStats> callable = getMetricStatsCallable(entry);
-
-            futures.add(executor.submit(callable));
-        }
-
-        executor.shutdown();
-
         List<MetricStats> result = new ArrayList<>();
-        for (Future<MetricStats> future : futures) {
-            result.add(future.get());
+
+        try {
+            for (Map.Entry<String, List<Double>> entry : data.entrySet()) {
+                Callable<MetricStats> callable = getMetricStatsCallable(entry);
+                futures.add(executor.submit(callable));
+            }
+
+            for (Future<MetricStats> future : futures) {
+                result.add(future.get());
+            }
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        } finally {
+            executor.shutdown();
         }
 
         return result;
