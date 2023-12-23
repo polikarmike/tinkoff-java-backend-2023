@@ -2,9 +2,9 @@ package edu.hw8.task3;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -14,19 +14,19 @@ public class MultiThreadedPasswordCracker {
     private static final int MAX_LENGTH_WORD = 6;
     private static final int HEX_255 = 0xff;
 
-
     private MultiThreadedPasswordCracker() {}
 
     public static Map<String, String> decode(Map<String, String> passwordHashes, int numThreads)
         throws NoSuchAlgorithmException, InterruptedException {
-        Map<String, String> crackedPasswords = new HashMap<>();
+        Map<String, String> crackedPasswords = new ConcurrentHashMap<>();
+
         ExecutorService executor = Executors.newFixedThreadPool(numThreads);
 
         for (int length = 1; length <= MAX_LENGTH_WORD && !passwordHashes.isEmpty(); length++) {
             int finalLength = length;
             executor.submit(() -> {
                 try {
-                    generatePasswords("", finalLength, passwordHashes, crackedPasswords);
+                    generatePasswords(finalLength, passwordHashes, crackedPasswords);
                 } catch (NoSuchAlgorithmException e) {
                     throw new RuntimeException(e);
                 }
@@ -38,24 +38,33 @@ public class MultiThreadedPasswordCracker {
         return crackedPasswords;
     }
 
-    private static synchronized boolean generatePasswords(String current,
-        int length, Map<String, String> passwordHashes,
-        Map<String, String> crackedPasswords) throws NoSuchAlgorithmException {
-        if (length == 0) {
-            return checkPassword(current, passwordHashes, crackedPasswords);
-        } else {
-            for (int i = 0; i < ALPHABET.length(); i++) {
-                if (generatePasswords(current + ALPHABET.charAt(i),
-                    length - 1, passwordHashes, crackedPasswords)) {
-                    return true;
-                }
+    private static void generatePasswords(int length, Map<String, String> passwordHashes,
+        Map<String, String> crackedPasswords)
+        throws NoSuchAlgorithmException {
+
+        for (int i = 0; i < Math.pow(ALPHABET.length(), length); i++) {
+            String password = generatePassword(i, length);
+            if (checkPassword(password, passwordHashes, crackedPasswords)) {
+                break;
             }
         }
-        return false;
     }
 
-    private static synchronized boolean checkPassword(String password, Map<String, String> passwordHashes,
+    private static String generatePassword(int index, int length) {
+        int tempIndex = index;
+
+        StringBuilder password = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            int charIndex = tempIndex % ALPHABET.length();
+            password.append(ALPHABET.charAt(charIndex));
+            tempIndex /= ALPHABET.length();
+        }
+        return password.toString();
+    }
+
+    private static boolean checkPassword(String password, Map<String, String> passwordHashes,
         Map<String, String> crackedPasswords) throws NoSuchAlgorithmException {
+
         MessageDigest md = MessageDigest.getInstance("MD5");
         md.update(password.getBytes());
         byte[] digest = md.digest();

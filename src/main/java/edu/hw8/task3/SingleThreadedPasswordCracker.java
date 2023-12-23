@@ -13,30 +13,39 @@ public class SingleThreadedPasswordCracker {
 
     private SingleThreadedPasswordCracker() {}
 
-    public static Map<String, String> decode(Map<String, String> passwordHashes) throws NoSuchAlgorithmException {
+    public static Map<String, String> decode(Map<String, String> passwordHashes)
+        throws NoSuchAlgorithmException {
         Map<String, String> crackedPasswords = new HashMap<>();
 
         for (int length = 1; length <= MAX_LENGTH_WORD && !passwordHashes.isEmpty(); length++) {
-            if (generatePasswords("", length, passwordHashes, crackedPasswords)) {
-                break;
-            }
+            generatePasswords(length, passwordHashes, crackedPasswords);
         }
 
         return crackedPasswords;
     }
 
-    private static boolean generatePasswords(String current, int length, Map<String, String> passwordHashes,
-        Map<String, String> crackedPasswords) throws NoSuchAlgorithmException {
-        if (length == 0) {
-            return checkPassword(current, passwordHashes, crackedPasswords);
-        } else {
-            for (int i = 0; i < ALPHABET.length(); i++) {
-                if (generatePasswords(current + ALPHABET.charAt(i), length - 1, passwordHashes, crackedPasswords)) {
-                    return true;
-                }
+    private static void generatePasswords(int length, Map<String, String> passwordHashes,
+        Map<String, String> crackedPasswords)
+        throws NoSuchAlgorithmException {
+
+        for (int i = 0; i < Math.pow(ALPHABET.length(), length); i++) {
+            String password = generatePassword(i, length);
+            if (checkPassword(password, passwordHashes, crackedPasswords)) {
+                break;
             }
         }
-        return false;
+    }
+
+    private static String generatePassword(int index, int length) {
+        int tempIndex = index;
+
+        StringBuilder password = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            int charIndex = tempIndex % ALPHABET.length();
+            password.append(ALPHABET.charAt(charIndex));
+            tempIndex /= ALPHABET.length();
+        }
+        return password.toString();
     }
 
     private static boolean checkPassword(String password, Map<String, String> passwordHashes,
@@ -60,5 +69,4 @@ public class SingleThreadedPasswordCracker {
         }
         return passwordHashes.isEmpty();
     }
-
 }

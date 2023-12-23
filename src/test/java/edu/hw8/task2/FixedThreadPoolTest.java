@@ -7,42 +7,37 @@ import org.junit.jupiter.api.DisplayName;
 import static org.junit.Assert.assertEquals;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class FixedThreadPoolTest {
-    private FixedThreadPool threadPool;
-
-    @Before
-    public void givenFixedThreadPool() {
-        threadPool = new FixedThreadPool(4);
-        threadPool.start();
+    private long fibonacci(int n) {
+        if (n <= 1) return n;
+        else return fibonacci(n - 1) + fibonacci(n - 2);
     }
 
     @Test
     @DisplayName("Проверка работоспособность на примере параллельного вычисления чисел Фибоначчи")
-    public void testFibonacci() throws InterruptedException {
-        // Given
+    public void testFibonacci()  throws InterruptedException {
+        int numThreads = 5;
+        int numTasks = 10;
         final int[] fibonacciResults = new int[]{0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55};
-        CountDownLatch latch = new CountDownLatch(10);
+        AtomicInteger counter = new AtomicInteger();
 
-        // When & Then
-        for (int i = 0; i <= 10; i++) {
-            int finalI = i;
+        FixedThreadPool threadPool = new FixedThreadPool(numThreads);
+        threadPool.start();
+
+        for (int i = 0; i < numTasks; i++) {
+            int taskNum = i;
             threadPool.execute(() -> {
-                long result = fibonacci(finalI);
-                System.out.println("Fibonacci of " + finalI + " is " + result);
-                assertEquals(fibonacciResults[finalI], result);
-                latch.countDown();
+                long result = fibonacci(taskNum);
+                assertEquals(fibonacciResults[taskNum], result);
+                counter.incrementAndGet();
             });
         }
-    }
 
-    @After
-    public void thenCloseThreadPool() {
+        Thread.sleep(100);
+        assertEquals(numTasks, counter.get());
+
         threadPool.close();
-    }
-
-    private long fibonacci(int n) {
-        if (n <= 1) return n;
-        else return fibonacci(n - 1) + fibonacci(n - 2);
     }
 }

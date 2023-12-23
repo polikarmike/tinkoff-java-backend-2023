@@ -3,7 +3,6 @@ package edu.hw8.task3;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
 import java.util.Map;
 
 
@@ -62,13 +61,6 @@ public class Reporter {
         SingleThreadedPasswordCracker.decode(passwordHashes);
         long endTime = System.nanoTime();
         return endTime - startTime;
-    }
-
-    private static Map<String, String> createPasswordHashes() {
-        Map<String, String> passwordHashes = new HashMap<>();
-        passwordHashes.put("a.v.petrov", "c47d187067c6cf953245f128b5fde62a");
-        passwordHashes.put("v.v.belov", "81dc9bdb52d04dc20036dbd8313ed055");
-        return passwordHashes;
     }
 
     public static void createReport(String filePath, Map<String, String> passwordHashes, int numThreads) {

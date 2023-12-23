@@ -6,13 +6,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class QuoteServer implements Runnable {
     public QuoteServer() {}
 
-    private final static Logger LOGGER = LogManager.getLogger();
     private static final int PORT = 6666;
     private static final int MAX_CONNECTIONS = 5;
 

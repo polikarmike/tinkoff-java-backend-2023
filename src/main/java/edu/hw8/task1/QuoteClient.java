@@ -24,7 +24,7 @@ public class QuoteClient implements Runnable {
 
             Scanner scanner = new Scanner(System.in);
 
-            while (true) {
+            while (isRunning) {
                 System.out.println("Ваня: ");
                 String request = scanner.nextLine();
                 if ("exit".equalsIgnoreCase(request.trim())) {

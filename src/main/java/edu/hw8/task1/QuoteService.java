@@ -18,10 +18,6 @@ public class QuoteService {
     }
 
     public static String getQuoteByKeyword(String keyword) {
-        String quote = QUOTES.get(keyword.toLowerCase());
-        if (quote == null) {
-            quote = "Не могу найти цитату по этому ключевому слову";
-        }
-        return quote;
+        return QUOTES.getOrDefault(keyword.toLowerCase(), "Не могу найти цитату по этому ключевому слову");
     }
 }
