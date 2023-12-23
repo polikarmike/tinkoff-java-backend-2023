@@ -1,12 +1,10 @@
 package edu.hw8.task2;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import static org.junit.Assert.assertEquals;
 
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class FixedThreadPoolTest {
@@ -38,6 +36,6 @@ public class FixedThreadPoolTest {
         Thread.sleep(100);
         assertEquals(numTasks, counter.get());
 
-        threadPool.close();
+
     }
 }

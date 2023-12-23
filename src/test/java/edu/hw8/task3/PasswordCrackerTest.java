@@ -66,6 +66,4 @@ public class PasswordCrackerTest {
         // Then
         assertTrue(new java.io.File(filePath).exists());
     }
-
-
 }
