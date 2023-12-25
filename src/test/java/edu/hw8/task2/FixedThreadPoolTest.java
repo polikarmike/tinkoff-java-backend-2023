@@ -3,9 +3,10 @@ package edu.hw8.task2;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import static org.junit.Assert.assertEquals;
+
 
 import java.util.concurrent.atomic.AtomicInteger;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FixedThreadPoolTest {
     private long fibonacci(int n) {
