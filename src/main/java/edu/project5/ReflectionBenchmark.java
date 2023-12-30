@@ -23,12 +23,13 @@ import org.openjdk.jmh.runner.options.TimeValue;
 
 @State(Scope.Thread)
 public class ReflectionBenchmark {
+    private static final String METHOD_NAME = "name";
     private Student student;
     private Method directAccessMethod;
     private MethodHandle methodHandle;
     private StudentNameGetter lambdaMetafactoryGetter;
 
-    @SuppressWarnings({"UncommentedMain", "MagicNumber"})
+    @SuppressWarnings({"UncommentedMain"})
     public static void main(String[] args) throws RunnerException {
         Options options = new OptionsBuilder()
             .include(ReflectionBenchmark.class.getSimpleName())
@@ -36,31 +37,30 @@ public class ReflectionBenchmark {
             .shouldDoGC(true)
             .mode(Mode.AverageTime)
             .timeUnit(TimeUnit.NANOSECONDS)
-            .forks(1)
-            .warmupForks(1)
-            .warmupIterations(1)
-            .warmupTime(TimeValue.seconds(7))
-            .measurementIterations(1)
-            .measurementTime(TimeValue.seconds(7))
+            .forks(BenchmarkConstants.FORKS)
+            .warmupForks(BenchmarkConstants.WARMUP_FORKS)
+            .warmupIterations(BenchmarkConstants.WARMUP_ITERATIONS)
+            .warmupTime(TimeValue.seconds(BenchmarkConstants.WARMUP_TIME_SECONDS))
+            .measurementIterations(BenchmarkConstants.MEASUREMENT_ITERATIONS)
+            .measurementTime(TimeValue.seconds(BenchmarkConstants.MEASUREMENT_TIME_SECONDS))
             .build();
 
         new Runner(options).run();
     }
 
     @Setup
-    @SuppressWarnings({"MultipleStringLiterals"})
     public void setup() throws NoSuchMethodException, IllegalAccessException, Throwable {
         student = new Student("Alexander", "Biryukov");
-        directAccessMethod = Student.class.getMethod("name");
+        directAccessMethod = Student.class.getMethod(METHOD_NAME);
         MethodHandles.Lookup lookup = MethodHandles.lookup();
-        methodHandle = lookup.findVirtual(Student.class, "name", MethodType.methodType(String.class));
+        methodHandle = lookup.findVirtual(Student.class, METHOD_NAME, MethodType.methodType(String.class));
 
         CallSite callSite = LambdaMetafactory.metafactory(
             lookup,
             "getName",
             MethodType.methodType(StudentNameGetter.class),
             MethodType.methodType(String.class, Student.class),
-            lookup.findVirtual(Student.class, "name", MethodType.methodType(String.class)),
+            lookup.findVirtual(Student.class, METHOD_NAME, MethodType.methodType(String.class)),
             MethodType.methodType(String.class, Student.class)
         );
         lambdaMetafactoryGetter = (StudentNameGetter) callSite.getTarget().invokeExact();
@@ -89,13 +89,6 @@ public class ReflectionBenchmark {
         String name = lambdaMetafactoryGetter.getName(student);
         bh.consume(name);
     }
-
-    @FunctionalInterface
-    interface StudentNameGetter {
-        String getName(Student student);
-    }
-
-    record Student(String name, String surname) {}
 }
 
 
